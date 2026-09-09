@@ -5,19 +5,25 @@ pipeline {
 
         stage('Clone') {
             steps {
-                echo 'Pulling Flask code...'
+                echo 'Cloning Express Frontend...'
+                checkout scm
             }
         }
 
         stage('Install') {
             steps {
-                sh 'cd flask-backend && pip3 install -r requirements.txt'
+                sh '''
+                npm install
+                '''
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'pm2 restart flask || pm2 start "python3 flask-backend/app.py" --name flask'
+                sh '''
+                pm2 restart express || pm2 start app.js --name express
+                pm2 save
+                '''
             }
         }
     }
