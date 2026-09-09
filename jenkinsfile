@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Clone') {
+            steps {
+                echo 'Pulling Flask code...'
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh 'cd flask-backend && pip3 install -r requirements.txt'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'pm2 restart flask || pm2 start "python3 flask-backend/app.py" --name flask'
+            }
+        }
+    }
+}
