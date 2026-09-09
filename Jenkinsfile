@@ -5,7 +5,7 @@ pipeline {
 
         stage('Clone') {
             steps {
-                echo 'Cloning Express Frontend...'
+                echo 'Cloning Flask Backend...'
                 checkout scm
             }
         }
@@ -13,7 +13,8 @@ pipeline {
         stage('Install') {
             steps {
                 sh '''
-                npm install
+                python3 -m venv venv
+                venv/bin/pip install -r requirements.txt
                 '''
             }
         }
@@ -21,7 +22,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                pm2 restart express || pm2 start app.js --name express
+                pm2 restart flask || pm2 start app.py --name flask --interpreter ./venv/bin/python
                 pm2 save
                 '''
             }
